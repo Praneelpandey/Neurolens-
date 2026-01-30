@@ -1,0 +1,140 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #020617; /* Very Dark Navy */
+    color: #f8fafc;
+    line-height: 1.6;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 5%;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.logo span {
+    color: #38bdf8;
+    text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+}
+
+.nav-link {
+    color: #94a3b8;
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+.github-btn {
+    background: #1e293b;
+    padding: 8px 16px;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    border: 1px solid #334155;
+    transition: 0.3s;
+}
+
+.github-btn:hover {
+    background: #334155;
+}
+
+/* Hero Section */
+.hero {
+    max-width: 800px;
+    margin: 80px auto 40px;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.badge {
+    background: rgba(56, 189, 248, 0.1);
+    color: #38bdf8;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+h1 {
+    font-size: 4rem;
+    margin-top: 20px;
+    font-weight: 800;
+    letter-spacing: -2px;
+}
+
+h1 span {
+    color: #38bdf8;
+}
+
+p {
+    color: #94a3b8;
+    font-size: 1.2rem;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+/* Input Box */
+.input-container {
+    background: #0f172a;
+    padding: 8px;
+    border-radius: 12px;
+    display: flex;
+    border: 1px solid #1e293b;
+    margin-top: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 15px;
+    font-size: 1rem;
+    outline: none;
+}
+
+button {
+    background: #38bdf8;
+    color: #020617;
+    padding: 12px 30px;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #7dd3fc;
+    transform: translateY(-2px);
+}
+
+.result-placeholder {
+    margin: 50px auto;
+    padding: 30px;
+    max-width: 700px;
+    border-top: 1px solid #1e293b;
+    color: #64748b;
+}
+
+footer {
+    margin-top: 100px;
+    padding-bottom: 40px;
+    font-size: 0.9rem;
+    color: #475569;
+}
