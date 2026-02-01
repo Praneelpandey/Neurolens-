@@ -164,3 +164,21 @@ footer {
     letter-spacing: 1px;
     display: none;
 }
+
+/* Day 3 Updates */
+textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 15px;
+    font-size: 1rem;
+    outline: none;
+    resize: none; /* User size change na kar sake */
+    width: 100%;
+}
+
+/* Agar input container ki height adjust karni ho */
+.input-container {
+    align-items: flex-start; /* Button aur text upar align honge */
+}
