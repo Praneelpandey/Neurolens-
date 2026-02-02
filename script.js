@@ -1,4 +1,4 @@
-// Day 3: Connecting Real Gemini API
+// Day 4: Formatting & Copy Feature
 
 async function summarize() {
     const text = document.getElementById('paperText').value;
@@ -6,32 +6,32 @@ async function summarize() {
     const statusText = document.getElementById('statusText');
     const output = document.getElementById('output');
     
-    const API_KEY = 'AIzaSyBT8Kgw-yRUFkQKFolcxYtZjdKAaTxP5Bo'; 
+    // ⚠️ DAY 3 wali API Key yahan paste karna mat bhoolna!
+    const API_KEY = 'YOUR_GEMINI_API_KEY'; 
 
     if (text.trim() === "") {
         alert("Please paste some text first! 📄");
         return;
     }
 
-    // UI Updates
+    // UI Reset
     output.style.display = "none";
     loader.style.display = "block";
     statusText.style.display = "block";
     statusText.innerText = "NEUROLENS IS READING...";
 
-    // API Setup
+    // Prompt ko thoda aur smart banate hain
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
     
     const requestBody = {
         contents: [{
             parts: [{
-                text: `Summarize the following text into 3 simple bullet points for a college student. Keep it professional but easy to understand:\n\n${text}`
+                text: `You are an expert tech summarizer. Summarize the following text into 3 clear bullet points using markdown formatting. Make the key terms **bold**. \n\nText: ${text}`
             }]
         }]
     };
 
     try {
-        // Fetch request bhejna (Sending data to Google)
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -40,30 +40,43 @@ async function summarize() {
 
         const data = await response.json();
 
-        // Response check karna
         if (data.candidates && data.candidates[0].content) {
-            const summary = data.candidates[0].content.parts[0].text;
+            const rawSummary = data.candidates[0].content.parts[0].text;
             
-            // Format formatting (Markdown **Bold** ko HTML <b> mein badalna)
-            const formattedSummary = summary.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+            // Day 4 Magic: Marked.js se text ko HTML mein badalna
+            const formattedSummary = marked.parse(rawSummary);
 
-            // Result Show karna
             output.innerHTML = `
-                <div style="background: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #38bdf8; text-align: left;">
-                    <h3 style="color: white; margin-bottom: 15px;">Neurolens Summary 🧠</h3>
-                    <p style="color: #e2e8f0; line-height: 1.6;">${formattedSummary}</p>
+                <div class="summary-box">
+                    <div class="summary-header">
+                        <h3>Neurolens Insight 🧠</h3>
+                        <button onclick="copyToClipboard()" class="copy-btn">📋 Copy</button>
+                    </div>
+                    <div class="summary-content">
+                        ${formattedSummary}
+                    </div>
                 </div>
             `;
         } else {
-            output.innerHTML = `<p style="color: red;">Error: Could not understand the text.</p>`;
+            output.innerHTML = `<p style="color: #ef4444;">Error: AI couldn't read that text.</p>`;
         }
 
     } catch (error) {
         console.error("Error:", error);
-        output.innerHTML = `<p style="color: red;">Something went wrong! Check console.</p>`;
+        output.innerHTML = `<p style="color: #ef4444;">Connection Failed! Check console.</p>`;
     } finally {
         loader.style.display = "none";
         statusText.style.display = "none";
         output.style.display = "block";
     }
+}
+
+// Day 4: New Feature - Copy Function
+function copyToClipboard() {
+    const text = document.querySelector('.summary-content').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.innerText = "✅ Copied!";
+        setTimeout(() => btn.innerText = "📋 Copy", 2000);
+    });
 }
