@@ -182,3 +182,51 @@ textarea {
 .input-container {
     align-items: flex-start; /* Button aur text upar align honge */
 }
+/* Day 4: Summary Box & Copy Button */
+.summary-box {
+    background: #1e293b; 
+    padding: 25px; 
+    border-radius: 16px; 
+    border: 1px solid #38bdf8; 
+    text-align: left;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 10px;
+}
+
+.summary-content {
+    color: #e2e8f0; 
+    line-height: 1.8;
+}
+
+/* Bullet points ko thoda adjust karte hain */
+.summary-content ul {
+    padding-left: 20px;
+}
+
+.summary-content li {
+    margin-bottom: 10px;
+}
+
+.copy-btn {
+    background: rgba(56, 189, 248, 0.1);
+    color: #38bdf8;
+    border: 1px solid #38bdf8;
+    padding: 5px 15px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.copy-btn:hover {
+    background: #38bdf8;
+    color: #0f172a;
+}
