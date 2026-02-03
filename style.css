@@ -230,3 +230,62 @@ textarea {
     background: #38bdf8;
     color: #0f172a;
 }
+/* Day 5: History Styling */
+.history-container {
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 0 20px;
+    text-align: left;
+    border-top: 1px solid #1e293b;
+    padding-top: 30px;
+}
+
+.history-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #94a3b8;
+}
+
+.history-card {
+    background: #0f172a;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1px solid #1e293b;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.history-card:hover {
+    border-color: #38bdf8;
+    transform: translateX(5px);
+}
+
+.history-card strong {
+    color: #38bdf8;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.history-card p {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Lambi text ko ... kar dega */
+}
+
+.clear-btn {
+    background: transparent;
+    border: 1px solid #ef4444;
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin-top: 20px;
+    padding: 8px 16px;
+}
+
+.clear-btn:hover {
+    background: #ef4444;
+    color: white;
+}
