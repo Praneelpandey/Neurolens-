@@ -289,3 +289,78 @@ textarea {
     background: #ef4444;
     color: white;
 }
+/* ========================
+   Day 6: Mobile & Notifications
+   ======================== */
+
+/* 1. Toast Notification Styling (Popup) */
+.toast {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    font-size: 17px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    border-left: 5px solid #38bdf8; /* Blue accent */
+    opacity: 0;
+    transition: opacity 0.5s, bottom 0.5s;
+}
+
+.toast.show {
+    visibility: visible;
+    opacity: 1;
+    bottom: 50px; /* Thoda upar slide hoga */
+}
+
+.toast.error {
+    border-left-color: #ef4444; /* Red for errors */
+}
+
+/* 2. Mobile Responsiveness (Media Queries) */
+@media screen and (max-width: 600px) {
+    
+    /* Header ko stack karo */
+    header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 1rem;
+    }
+
+    /* Text size chota karo */
+    h1 {
+        font-size: 2.5rem; /* 4rem se chota kiya */
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    /* Input box adjust karo */
+    .input-container {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    textarea {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    button {
+        width: 100%; /* Button full width */
+    }
+
+    /* History section adjust */
+    .history-container {
+        margin: 30px auto;
+        padding: 0 15px;
+    }
+}
