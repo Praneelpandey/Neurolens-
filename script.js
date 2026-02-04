@@ -1,24 +1,24 @@
 // ==========================================
-// NEUROLENS | Day 5 Complete Logic
-// Features: API Connection, Markdown, Copy, History
+// NEUROLENS | Day 6 Complete Logic
+// Features: API, Markdown, History, Mobile Toasts
 // ==========================================
 
 // 1. Page load hote hi history check karo
 document.addEventListener('DOMContentLoaded', loadHistory);
 
+// --- Main Summarize Function ---
 async function summarize() {
-    // HTML elements uthana
     const text = document.getElementById('paperText').value;
     const loader = document.getElementById('loader');
     const statusText = document.getElementById('statusText');
     const output = document.getElementById('output');
     
-    // ⚠️ REPLACE THIS WITH YOUR ACTUAL API KEY
+    // ⚠️ PASTE YOUR API KEY HERE
     const API_KEY = 'AIzaSyBT8Kgw-yRUFkQKFolcxYtZjdKAaTxP5Bo'; 
 
-    // Validation: Agar input khaali hai toh roko
+    // Validation with Toast (Day 6 Update)
     if (text.trim() === "") {
-        alert("Please paste some text first! 📄");
+        showToast("Please paste some text first! 📄", "error");
         return;
     }
 
@@ -31,7 +31,6 @@ async function summarize() {
     // Gemini API Setup
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
     
-    // Prompt Engineering
     const requestBody = {
         contents: [{
             parts: [{
@@ -41,7 +40,6 @@ async function summarize() {
     };
 
     try {
-        // Data bhejna (Fetch Request)
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -50,11 +48,8 @@ async function summarize() {
 
         const data = await response.json();
 
-        // Data aane ke baad kya karna hai
         if (data.candidates && data.candidates[0].content) {
             const rawSummary = data.candidates[0].content.parts[0].text;
-            
-            // Markdown ko HTML mein badalna (using marked.js)
             const formattedSummary = marked.parse(rawSummary);
 
             // Result show karna
@@ -70,65 +65,57 @@ async function summarize() {
                 </div>
             `;
 
-            // 🔥 HISTORY SAVE KARNA (Day 5 Feature)
+            // History mein save karo
             saveToHistory(text, formattedSummary);
+            showToast("Analysis Complete! 🚀"); // Success Toast
 
         } else {
             output.innerHTML = `<p style="color: #ef4444;">Error: AI couldn't read that text.</p>`;
+            showToast("AI Error: Could not generate summary", "error");
         }
 
     } catch (error) {
         console.error("Error:", error);
         output.innerHTML = `<p style="color: #ef4444;">Connection Failed! Check console.</p>`;
+        showToast("Network Error! check internet", "error");
     } finally {
-        // Loading state OFF
         loader.style.display = "none";
         statusText.style.display = "none";
         output.style.display = "block";
     }
 }
 
-// --- Copy Function ---
+// --- Copy Function with Toast ---
 function copyToClipboard() {
     const text = document.querySelector('.summary-content').innerText;
     navigator.clipboard.writeText(text).then(() => {
         const btn = document.querySelector('.copy-btn');
         btn.innerText = "✅ Copied!";
+        showToast("Summary copied to clipboard! 📋"); // Toast Notification
         setTimeout(() => btn.innerText = "📋 Copy", 2000);
     });
 }
 
 // ==========================================
-// HISTORY MANAGEMENT (LOCAL STORAGE)
+// HISTORY MANAGEMENT
 // ==========================================
 
-// History Save karna
 function saveToHistory(originalText, summaryHtml) {
     const historyItem = {
-        title: originalText.substring(0, 40) + "...", // Sirf shuru ke 40 words dikhana
+        title: originalText.substring(0, 40) + "...",
         summary: summaryHtml,
-        date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) // Sirf time (e.g., 10:30 AM)
+        date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
-    // LocalStorage se purana data nikalo
     let history = JSON.parse(localStorage.getItem('neurolensHistory')) || [];
-    
-    // Naya item sabse upar add karo
     history.unshift(historyItem);
     
-    // Agar 5 se zyada items ho jayein, toh purana delete kar do
-    if (history.length > 5) {
-        history.pop();
-    }
+    if (history.length > 5) history.pop();
     
-    // Wapas save karo
     localStorage.setItem('neurolensHistory', JSON.stringify(history));
-    
-    // List update karo
     loadHistory();
 }
 
-// History Load karna (Page khulte hi)
 function loadHistory() {
     const historyList = document.getElementById('historyList');
     let history = JSON.parse(localStorage.getItem('neurolensHistory')) || [];
@@ -138,7 +125,6 @@ function loadHistory() {
         return;
     }
 
-    // HTML generate karna har history item ke liye
     historyList.innerHTML = history.map((item, index) => `
         <div class="history-card" onclick="restoreSummary(${index})">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
@@ -150,7 +136,6 @@ function loadHistory() {
     `).join('');
 }
 
-// Purani summary wapas dikhana
 function restoreSummary(index) {
     let history = JSON.parse(localStorage.getItem('neurolensHistory'));
     const item = history[index];
@@ -159,7 +144,8 @@ function restoreSummary(index) {
     output.style.display = 'block';
     
     output.innerHTML = `
-        <div class="summary-box" style="border-color: #a855f7;"> <div class="summary-header">
+        <div class="summary-box" style="border-color: #a855f7;">
+            <div class="summary-header">
                 <h3 style="color: #a855f7;">🔄 Restored from History</h3>
                 <button onclick="copyToClipboard()" class="copy-btn">📋 Copy</button>
             </div>
@@ -169,14 +155,38 @@ function restoreSummary(index) {
         </div>
     `;
     
-    // Smooth scroll karke result dikhana
     output.scrollIntoView({ behavior: 'smooth' });
+    showToast("Restored from History 🕒");
 }
 
-// History Delete karna
 function clearHistory() {
     if(confirm("Are you sure you want to delete all history?")) {
         localStorage.removeItem('neurolensHistory');
         loadHistory();
+        showToast("History Cleared! 🗑️", "error");
     }
+}
+
+// ==========================================
+// DAY 6: CUSTOM TOAST NOTIFICATION FUNCTION
+// ==========================================
+
+function showToast(message, type = "success") {
+    const toast = document.getElementById("toast");
+    
+    // Set Message
+    toast.innerText = message;
+    
+    // Reset Classes
+    toast.className = "toast show"; 
+    
+    // Agar error hai toh red color add karo
+    if (type === "error") {
+        toast.classList.add("error");
+    }
+
+    // 3 Seconds baad hide kar do
+    setTimeout(function() { 
+        toast.className = toast.className.replace("show", ""); 
+    }, 3000);
 }
