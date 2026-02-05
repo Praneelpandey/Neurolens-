@@ -3,66 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Neurolens | AI Research Summarizer</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+    
     <meta property="og:title" content="Neurolens | AI Research Summarizer">
     <meta property="og:description" content="Summarize complex text instantly using Gemini AI. Built by an AI Student.">
     <meta property="og:image" content="https://via.placeholder.com/1200x630/0f172a/38bdf8?text=Neurolens+AI">
-    <title>Neurolens | AI Summarized</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 </head>
 <body>
     <header>
         <div class="logo">Neuro<span>lens</span></div>
         <nav>
-            <ahref="#" class="nav-link">Docs</a>
-            <ahref="https://github.com" target="_blank" class="github-btn">GitHub</a>
+            <a href="#" class="nav-link">Docs</a>
+            <a href="https://github.com/YOUR_USERNAME" target="_blank" class="github-btn">GitHub</a>
         </nav>
     </header>
 
     <main>
         <div class="hero">
-            <span class="badge">Day 1: The Launch</span>
+            <span class="badge">Day 7: PDF Export Added</span>
             <h1>Fast-Track Your <br><span>AI Knowledge</span></h1>
             <p>Don't read pages. Get the pulse. Summarize complex AI research papers in seconds using Google Gemini.</p>
             
-           <div class="input-container">
+            <div class="input-container">
                 <textarea id="paperText" placeholder="Paste the Paper's Abstract or Text here..." rows="3"></textarea>
                 <button onclick="summarize()">Analyze</button>
             </div>
         </div>
 
-         <section id="result" class="result-placeholder">
+        <section id="result" class="result-placeholder">
             <div id="loader" class="loader"></div>
-            <p id="statusText" class="analyzing-text">NEUROLENS IS THINKING....</p>
-
+            <p id="statusText" class="analyzing-text">NEUROLENS IS THINKING...</p>
+            
             <div id="output">
-                <p>Enter a link above to see the Neurolens magic. ✨</p>
+                <p>Enter text above to see the Neurolens magic. ✨</p>
             </div>
         </section>
+
         <div class="history-container">
             <h2>🕒 Recent Scans</h2>
             <div id="historyList">
-                <p class="empty-msg">No history yet. Analyze something!</p>
+                <p class="empty-msg">No history yet.</p>
             </div>
             <button onclick="clearHistory()" class="clear-btn">Clear History</button>
         </div>
     </main>
 
-    <footer>
-        <p>&copy; 2026 Neurolens | Built by Praneel Pandey</p>
-    </footer>
-                
     <div id="toast" class="toast">Notification Message</div>
+
+    <footer>
+        <p>&copy; 2026 Neurolens | Built by a First-Year AI Student</p>
+    </footer>
+
     <script src="script.js"></script>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
