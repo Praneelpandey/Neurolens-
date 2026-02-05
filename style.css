@@ -364,3 +364,20 @@ textarea {
         padding: 0 15px;
     }
 }
+/* Day 7: Download PDF Button */
+.download-btn {
+    background: rgba(16, 185, 129, 0.1); /* Green tint */
+    color: #10b981; /* Green text */
+    border: 1px solid #10b981;
+    padding: 5px 15px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-left: 10px; /* Copy button se thodi duri */
+    transition: 0.2s;
+}
+
+.download-btn:hover {
+    background: #10b981;
+    color: #0f172a;
+}
