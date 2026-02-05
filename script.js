@@ -1,9 +1,8 @@
 // ==========================================
-// NEUROLENS | Day 6 Complete Logic
-// Features: API, Markdown, History, Mobile Toasts
+// NEUROLENS | Day 7 Complete Logic
+// Features: API, Markdown, History, Mobile Toasts, PDF Export
 // ==========================================
 
-// 1. Page load hote hi history check karo
 document.addEventListener('DOMContentLoaded', loadHistory);
 
 // --- Main Summarize Function ---
@@ -16,19 +15,16 @@ async function summarize() {
     // ⚠️ PASTE YOUR API KEY HERE
     const API_KEY = 'AIzaSyBT8Kgw-yRUFkQKFolcxYtZjdKAaTxP5Bo'; 
 
-    // Validation with Toast (Day 6 Update)
     if (text.trim() === "") {
         showToast("Please paste some text first! 📄", "error");
         return;
     }
 
-    // UI Updates: Loading state ON
     output.style.display = "none";
     loader.style.display = "block";
     statusText.style.display = "block";
     statusText.innerText = "NEUROLENS IS READING...";
 
-    // Gemini API Setup
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
     
     const requestBody = {
@@ -52,12 +48,15 @@ async function summarize() {
             const rawSummary = data.candidates[0].content.parts[0].text;
             const formattedSummary = marked.parse(rawSummary);
 
-            // Result show karna
+            // UI Update: Added Download Button
             output.innerHTML = `
-                <div class="summary-box">
+                <div class="summary-box" id="summaryContent">
                     <div class="summary-header">
                         <h3>Neurolens Insight 🧠</h3>
-                        <button onclick="copyToClipboard()" class="copy-btn">📋 Copy</button>
+                        <div class="action-buttons">
+                            <button onclick="copyToClipboard()" class="copy-btn">📋 Copy</button>
+                            <button onclick="downloadPDF()" class="download-btn">⬇️ PDF</button>
+                        </div>
                     </div>
                     <div class="summary-content">
                         ${formattedSummary}
@@ -65,9 +64,8 @@ async function summarize() {
                 </div>
             `;
 
-            // History mein save karo
             saveToHistory(text, formattedSummary);
-            showToast("Analysis Complete! 🚀"); // Success Toast
+            showToast("Analysis Complete! 🚀");
 
         } else {
             output.innerHTML = `<p style="color: #ef4444;">Error: AI couldn't read that text.</p>`;
@@ -85,14 +83,30 @@ async function summarize() {
     }
 }
 
-// --- Copy Function with Toast ---
+// --- Copy Function ---
 function copyToClipboard() {
     const text = document.querySelector('.summary-content').innerText;
     navigator.clipboard.writeText(text).then(() => {
-        const btn = document.querySelector('.copy-btn');
-        btn.innerText = "✅ Copied!";
-        showToast("Summary copied to clipboard! 📋"); // Toast Notification
-        setTimeout(() => btn.innerText = "📋 Copy", 2000);
+        showToast("Summary copied to clipboard! 📋");
+    });
+}
+
+// --- Day 7: Download PDF Function ---
+function downloadPDF() {
+    const element = document.getElementById('summaryContent');
+    
+    // PDF Generation Options
+    const opt = {
+        margin:       10,
+        filename:     'Neurolens_Summary.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, backgroundColor: "#1e293b" }, // Dark background preserve karega
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    // Generate
+    html2pdf().set(opt).from(element).save().then(() => {
+        showToast("PDF Downloaded! 📄");
     });
 }
 
@@ -109,7 +123,6 @@ function saveToHistory(originalText, summaryHtml) {
 
     let history = JSON.parse(localStorage.getItem('neurolensHistory')) || [];
     history.unshift(historyItem);
-    
     if (history.length > 5) history.pop();
     
     localStorage.setItem('neurolensHistory', JSON.stringify(history));
@@ -143,11 +156,15 @@ function restoreSummary(index) {
     const output = document.getElementById('output');
     output.style.display = 'block';
     
+    // Day 7: Restore mein bhi Download button add kiya
     output.innerHTML = `
-        <div class="summary-box" style="border-color: #a855f7;">
+        <div class="summary-box" id="summaryContent" style="border-color: #a855f7;">
             <div class="summary-header">
                 <h3 style="color: #a855f7;">🔄 Restored from History</h3>
-                <button onclick="copyToClipboard()" class="copy-btn">📋 Copy</button>
+                <div class="action-buttons">
+                    <button onclick="copyToClipboard()" class="copy-btn">📋 Copy</button>
+                    <button onclick="downloadPDF()" class="download-btn">⬇️ PDF</button>
+                </div>
             </div>
             <div class="summary-content">
                 ${item.summary}
@@ -167,26 +184,10 @@ function clearHistory() {
     }
 }
 
-// ==========================================
-// DAY 6: CUSTOM TOAST NOTIFICATION FUNCTION
-// ==========================================
-
 function showToast(message, type = "success") {
     const toast = document.getElementById("toast");
-    
-    // Set Message
     toast.innerText = message;
-    
-    // Reset Classes
     toast.className = "toast show"; 
-    
-    // Agar error hai toh red color add karo
-    if (type === "error") {
-        toast.classList.add("error");
-    }
-
-    // 3 Seconds baad hide kar do
-    setTimeout(function() { 
-        toast.className = toast.className.replace("show", ""); 
-    }, 3000);
+    if (type === "error") toast.classList.add("error");
+    setTimeout(function() { toast.className = toast.className.replace("show", ""); }, 3000);
 }
