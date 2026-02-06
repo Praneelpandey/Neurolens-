@@ -1,9 +1,13 @@
 // ==========================================
-// NEUROLENS | Day 7 Complete Logic
-// Features: API, Markdown, History, Mobile Toasts, PDF Export
+// NEUROLENS | Day 8 Complete Logic
+// Features: API, Markdown, History, PDF, Text-to-Speech
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', loadHistory);
+
+// Global variable to control speech
+let speechController = new SpeechSynthesisUtterance();
+let isSpeaking = false;
 
 // --- Main Summarize Function ---
 async function summarize() {
@@ -19,6 +23,9 @@ async function summarize() {
         showToast("Please paste some text first! 📄", "error");
         return;
     }
+
+    // Stop speaking if already speaking
+    window.speechSynthesis.cancel();
 
     output.style.display = "none";
     loader.style.display = "block";
@@ -48,7 +55,7 @@ async function summarize() {
             const rawSummary = data.candidates[0].content.parts[0].text;
             const formattedSummary = marked.parse(rawSummary);
 
-            // UI Update: Added Download Button
+            // UI Update: Added Listen Button (Day 8)
             output.innerHTML = `
                 <div class="summary-box" id="summaryContent">
                     <div class="summary-header">
@@ -56,15 +63,17 @@ async function summarize() {
                         <div class="action-buttons">
                             <button onclick="copyToClipboard()" class="copy-btn">📋 Copy</button>
                             <button onclick="downloadPDF()" class="download-btn">⬇️ PDF</button>
+                            <button onclick="speakSummary()" id="listenBtn" class="listen-btn">🔊 Listen</button>
                         </div>
                     </div>
                     <div class="summary-content">
                         ${formattedSummary}
                     </div>
+                    <div id="rawSpeechText" style="display:none;">${rawSummary}</div>
                 </div>
             `;
 
-            saveToHistory(text, formattedSummary);
+            saveToHistory(text, formattedSummary, rawSummary);
             showToast("Analysis Complete! 🚀");
 
         } else {
@@ -83,7 +92,47 @@ async function summarize() {
     }
 }
 
-// --- Copy Function ---
+// --- Day 8: Text-to-Speech Function ---
+function speakSummary() {
+    const btn = document.getElementById('listenBtn');
+    
+    // Agar pehle se bol raha hai, toh chup karao (Toggle)
+    if (isSpeaking) {
+        window.speechSynthesis.cancel();
+        isSpeaking = false;
+        btn.innerText = "🔊 Listen";
+        btn.classList.remove("speaking");
+        return;
+    }
+
+    // Text nikalo (Markdown symbols hata ke saaf text)
+    // Hum raw text use karenge jo humne hidden div mein rakha tha
+    let textToSpeak = document.getElementById('rawSpeechText').innerText;
+    
+    // Clean up markdown symbols like ** or # for smoother speech
+    textToSpeak = textToSpeak.replace(/[*#]/g, '');
+
+    speechController.text = textToSpeak;
+    speechController.lang = 'en-US';
+    speechController.rate = 1; // Normal speed
+    speechController.pitch = 1;
+
+    // Jab bolna khatam ho jaye
+    speechController.onend = function() {
+        isSpeaking = false;
+        btn.innerText = "🔊 Listen";
+        btn.classList.remove("speaking");
+    };
+
+    // Bolna shuru karo
+    window.speechSynthesis.speak(speechController);
+    isSpeaking = true;
+    btn.innerText = "⏹️ Stop";
+    btn.classList.add("speaking");
+}
+
+// --- Helper Functions ---
+
 function copyToClipboard() {
     const text = document.querySelector('.summary-content').innerText;
     navigator.clipboard.writeText(text).then(() => {
@@ -91,33 +140,24 @@ function copyToClipboard() {
     });
 }
 
-// --- Day 7: Download PDF Function ---
 function downloadPDF() {
     const element = document.getElementById('summaryContent');
-    
-    // PDF Generation Options
     const opt = {
-        margin:       10,
-        filename:     'Neurolens_Summary.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, backgroundColor: "#1e293b" }, // Dark background preserve karega
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        margin: 10,
+        filename: 'Neurolens_Summary.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, backgroundColor: "#1e293b" },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
-
-    // Generate
-    html2pdf().set(opt).from(element).save().then(() => {
-        showToast("PDF Downloaded! 📄");
-    });
+    html2pdf().set(opt).from(element).save().then(() => showToast("PDF Downloaded! 📄"));
 }
 
-// ==========================================
-// HISTORY MANAGEMENT
-// ==========================================
-
-function saveToHistory(originalText, summaryHtml) {
+// History Management (Updated for Day 8 to save raw text)
+function saveToHistory(originalText, summaryHtml, rawSummary) {
     const historyItem = {
         title: originalText.substring(0, 40) + "...",
         summary: summaryHtml,
+        raw: rawSummary || "Summary not available for speech", // Fallback
         date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
@@ -156,7 +196,6 @@ function restoreSummary(index) {
     const output = document.getElementById('output');
     output.style.display = 'block';
     
-    // Day 7: Restore mein bhi Download button add kiya
     output.innerHTML = `
         <div class="summary-box" id="summaryContent" style="border-color: #a855f7;">
             <div class="summary-header">
@@ -164,11 +203,11 @@ function restoreSummary(index) {
                 <div class="action-buttons">
                     <button onclick="copyToClipboard()" class="copy-btn">📋 Copy</button>
                     <button onclick="downloadPDF()" class="download-btn">⬇️ PDF</button>
+                    <button onclick="speakSummary()" id="listenBtn" class="listen-btn">🔊 Listen</button>
                 </div>
             </div>
-            <div class="summary-content">
-                ${item.summary}
-            </div>
+            <div class="summary-content">${item.summary}</div>
+            <div id="rawSpeechText" style="display:none;">${item.raw || "Text unavailable"}</div>
         </div>
     `;
     
@@ -177,7 +216,7 @@ function restoreSummary(index) {
 }
 
 function clearHistory() {
-    if(confirm("Are you sure you want to delete all history?")) {
+    if(confirm("Delete history?")) {
         localStorage.removeItem('neurolensHistory');
         loadHistory();
         showToast("History Cleared! 🗑️", "error");
