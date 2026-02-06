@@ -381,3 +381,32 @@ textarea {
     background: #10b981;
     color: #0f172a;
 }
+/* Day 8: Text-to-Speech Button */
+.listen-btn {
+    background: rgba(168, 85, 247, 0.1); /* Purple tint */
+    color: #a855f7; /* Purple text */
+    border: 1px solid #a855f7;
+    padding: 5px 15px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: 0.2s;
+}
+
+.listen-btn:hover {
+    background: #a855f7;
+    color: white;
+}
+
+.listen-btn.speaking {
+    background: #a855f7;
+    color: white;
+    animation: pulse 1.5s infinite; /* Bolte waqt dhak-dhak karega */
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
