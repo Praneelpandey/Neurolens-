@@ -1,45 +1,67 @@
 // ==========================================
-// NEUROLENS | Day 8 Complete Logic
-// Features: API, Markdown, History, PDF, Text-to-Speech
+// NEUROLENS | Day 9: Complete Logic
+// Features: Security, Settings, Modes, History, PDF, Voice
 // ==========================================
 
-document.addEventListener('DOMContentLoaded', loadHistory);
-
-// Global variable to control speech
+// Global Variables
+let userKey = "";           // API Key yahan store hogi
+let summaryMode = "bullet"; // Default mode
 let speechController = new SpeechSynthesisUtterance();
 let isSpeaking = false;
 
-// --- Main Summarize Function ---
+// 1. Initialize App
+document.addEventListener('DOMContentLoaded', () => {
+    loadHistory();  // Purani history load karo
+    loadSettings(); // Saved API Key aur Mode load karo
+});
+
+// ==========================================
+// MAIN LOGIC: SUMMARIZE
+// ==========================================
+
 async function summarize() {
     const text = document.getElementById('paperText').value;
     const loader = document.getElementById('loader');
     const statusText = document.getElementById('statusText');
     const output = document.getElementById('output');
     
-    // ⚠️ PASTE YOUR API KEY HERE
-    const API_KEY = 'AIzaSyBT8Kgw-yRUFkQKFolcxYtZjdKAaTxP5Bo'; 
+    // SECURITY CHECK: Agar API Key nahi hai, toh user ko roko
+    if (!userKey) {
+        showToast("⚠️ API Key missing! Open Settings ⚙️ to add it.", "error");
+        openSettings(); // Auto open settings modal
+        return;
+    }
 
     if (text.trim() === "") {
         showToast("Please paste some text first! 📄", "error");
         return;
     }
 
-    // Stop speaking if already speaking
+    // Stop speaking if active
     window.speechSynthesis.cancel();
 
+    // UI Updates
     output.style.display = "none";
     loader.style.display = "block";
     statusText.style.display = "block";
-    statusText.innerText = "NEUROLENS IS READING...";
+    statusText.innerText = "NEUROLENS IS THINKING...";
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+    // DAY 9: DYNAMIC PROMPT (Based on Mode)
+    let promptText = "";
+    if (summaryMode === "detailed") {
+        promptText = `You are a professional researcher. Provide a detailed summary of the following text in 3-4 paragraphs. Use bold formatting for key concepts.\n\nText: ${text}`;
+    } else if (summaryMode === "eli5") {
+        promptText = `Explain the following text like I am a 5-year-old. Use simple words, fun analogies, and bullet points.\n\nText: ${text}`;
+    } else {
+        // Default (Bullet)
+        promptText = `Summarize the following text into 3 clear bullet points using markdown formatting. Make key terms **bold**.\n\nText: ${text}`;
+    }
+
+    // API Setup (Using User's Key)
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${userKey}`;
     
     const requestBody = {
-        contents: [{
-            parts: [{
-                text: `You are an expert tech summarizer. Summarize the following text into 3 clear bullet points using markdown formatting. Make the key terms **bold**. \n\nText: ${text}`
-            }]
-        }]
+        contents: [{ parts: [{ text: promptText }] }]
     };
 
     try {
@@ -51,40 +73,43 @@ async function summarize() {
 
         const data = await response.json();
 
+        // Handle Invalid Key Error
+        if (data.error) {
+            showToast("Invalid API Key! Please check Settings.", "error");
+            openSettings();
+            return;
+        }
+
         if (data.candidates && data.candidates[0].content) {
             const rawSummary = data.candidates[0].content.parts[0].text;
             const formattedSummary = marked.parse(rawSummary);
 
-            // UI Update: Added Listen Button (Day 8)
+            // Render Output with Buttons
             output.innerHTML = `
                 <div class="summary-box" id="summaryContent">
                     <div class="summary-header">
                         <h3>Neurolens Insight 🧠</h3>
                         <div class="action-buttons">
-                            <button onclick="copyToClipboard()" class="copy-btn">📋 Copy</button>
-                            <button onclick="downloadPDF()" class="download-btn">⬇️ PDF</button>
-                            <button onclick="speakSummary()" id="listenBtn" class="listen-btn">🔊 Listen</button>
+                            <button onclick="copyToClipboard()" class="copy-btn" title="Copy Text">📋</button>
+                            <button onclick="downloadPDF()" class="download-btn" title="Download PDF">⬇️</button>
+                            <button onclick="speakSummary()" id="listenBtn" class="listen-btn" title="Listen">🔊 Listen</button>
                         </div>
                     </div>
-                    <div class="summary-content">
-                        ${formattedSummary}
-                    </div>
+                    <div class="summary-content">${formattedSummary}</div>
                     <div id="rawSpeechText" style="display:none;">${rawSummary}</div>
                 </div>
             `;
-
+            
             saveToHistory(text, formattedSummary, rawSummary);
             showToast("Analysis Complete! 🚀");
 
         } else {
             output.innerHTML = `<p style="color: #ef4444;">Error: AI couldn't read that text.</p>`;
-            showToast("AI Error: Could not generate summary", "error");
         }
 
     } catch (error) {
         console.error("Error:", error);
-        output.innerHTML = `<p style="color: #ef4444;">Connection Failed! Check console.</p>`;
-        showToast("Network Error! check internet", "error");
+        output.innerHTML = `<p style="color: #ef4444;">Connection Failed! Check internet.</p>`;
     } finally {
         loader.style.display = "none";
         statusText.style.display = "none";
@@ -92,51 +117,66 @@ async function summarize() {
     }
 }
 
-// --- Day 8: Text-to-Speech Function ---
-function speakSummary() {
-    const btn = document.getElementById('listenBtn');
-    
-    // Agar pehle se bol raha hai, toh chup karao (Toggle)
-    if (isSpeaking) {
-        window.speechSynthesis.cancel();
-        isSpeaking = false;
-        btn.innerText = "🔊 Listen";
-        btn.classList.remove("speaking");
+// ==========================================
+// DAY 9: SETTINGS MANAGEMENT
+// ==========================================
+
+function openSettings() {
+    document.getElementById("settingsModal").style.display = "block";
+    // Pre-fill input if key exists
+    if(userKey) document.getElementById("userApiKey").value = userKey;
+    document.getElementById("summaryStyle").value = summaryMode;
+}
+
+function closeSettings() {
+    document.getElementById("settingsModal").style.display = "none";
+}
+
+// Modal ke bahar click karne par close ho jaye
+window.onclick = function(event) {
+    const modal = document.getElementById("settingsModal");
+    if (event.target == modal) {
+        closeSettings();
+    }
+}
+
+function saveSettings() {
+    const keyInput = document.getElementById("userApiKey").value.trim();
+    const modeInput = document.getElementById("summaryStyle").value;
+
+    if (keyInput === "") {
+        showToast("API Key cannot be empty!", "error");
         return;
     }
 
-    // Text nikalo (Markdown symbols hata ke saaf text)
-    // Hum raw text use karenge jo humne hidden div mein rakha tha
-    let textToSpeak = document.getElementById('rawSpeechText').innerText;
-    
-    // Clean up markdown symbols like ** or # for smoother speech
-    textToSpeak = textToSpeak.replace(/[*#]/g, '');
+    // Save to LocalStorage
+    localStorage.setItem("neurolensKey", keyInput);
+    localStorage.setItem("neurolensMode", modeInput);
 
-    speechController.text = textToSpeak;
-    speechController.lang = 'en-US';
-    speechController.rate = 1; // Normal speed
-    speechController.pitch = 1;
+    // Update global variables
+    userKey = keyInput;
+    summaryMode = modeInput;
 
-    // Jab bolna khatam ho jaye
-    speechController.onend = function() {
-        isSpeaking = false;
-        btn.innerText = "🔊 Listen";
-        btn.classList.remove("speaking");
-    };
-
-    // Bolna shuru karo
-    window.speechSynthesis.speak(speechController);
-    isSpeaking = true;
-    btn.innerText = "⏹️ Stop";
-    btn.classList.add("speaking");
+    closeSettings();
+    showToast("Settings Saved! ✅");
 }
 
-// --- Helper Functions ---
+function loadSettings() {
+    const savedKey = localStorage.getItem("neurolensKey");
+    const savedMode = localStorage.getItem("neurolensMode");
+
+    if (savedKey) userKey = savedKey;
+    if (savedMode) summaryMode = savedMode;
+}
+
+// ==========================================
+// UTILITIES: COPY, PDF, VOICE
+// ==========================================
 
 function copyToClipboard() {
     const text = document.querySelector('.summary-content').innerText;
     navigator.clipboard.writeText(text).then(() => {
-        showToast("Summary copied to clipboard! 📋");
+        showToast("Summary copied! 📋");
     });
 }
 
@@ -152,12 +192,45 @@ function downloadPDF() {
     html2pdf().set(opt).from(element).save().then(() => showToast("PDF Downloaded! 📄"));
 }
 
-// History Management (Updated for Day 8 to save raw text)
+function speakSummary() {
+    const btn = document.getElementById('listenBtn');
+    
+    if (isSpeaking) {
+        window.speechSynthesis.cancel();
+        isSpeaking = false;
+        btn.innerText = "🔊 Listen";
+        btn.classList.remove("speaking");
+        return;
+    }
+
+    let textToSpeak = document.getElementById('rawSpeechText').innerText;
+    textToSpeak = textToSpeak.replace(/[*#]/g, ''); // Remove Markdown symbols
+
+    speechController.text = textToSpeak;
+    speechController.lang = 'en-US';
+    
+    speechController.onend = function() {
+        isSpeaking = false;
+        btn.innerText = "🔊 Listen";
+        btn.classList.remove("speaking");
+    };
+
+    window.speechSynthesis.speak(speechController);
+    isSpeaking = true;
+    btn.innerText = "⏹️ Stop";
+    btn.classList.add("speaking");
+}
+
+// ==========================================
+// HISTORY MANAGEMENT
+// ==========================================
+
 function saveToHistory(originalText, summaryHtml, rawSummary) {
     const historyItem = {
         title: originalText.substring(0, 40) + "...",
         summary: summaryHtml,
-        raw: rawSummary || "Summary not available for speech", // Fallback
+        raw: rawSummary || "Text unavailable",
+        mode: summaryMode, // Save mode too
         date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
@@ -199,15 +272,15 @@ function restoreSummary(index) {
     output.innerHTML = `
         <div class="summary-box" id="summaryContent" style="border-color: #a855f7;">
             <div class="summary-header">
-                <h3 style="color: #a855f7;">🔄 Restored from History</h3>
+                <h3 style="color: #a855f7;">🔄 Restored (${item.mode || "bullet"})</h3>
                 <div class="action-buttons">
-                    <button onclick="copyToClipboard()" class="copy-btn">📋 Copy</button>
-                    <button onclick="downloadPDF()" class="download-btn">⬇️ PDF</button>
+                    <button onclick="copyToClipboard()" class="copy-btn">📋</button>
+                    <button onclick="downloadPDF()" class="download-btn">⬇️</button>
                     <button onclick="speakSummary()" id="listenBtn" class="listen-btn">🔊 Listen</button>
                 </div>
             </div>
             <div class="summary-content">${item.summary}</div>
-            <div id="rawSpeechText" style="display:none;">${item.raw || "Text unavailable"}</div>
+            <div id="rawSpeechText" style="display:none;">${item.raw}</div>
         </div>
     `;
     
@@ -216,17 +289,25 @@ function restoreSummary(index) {
 }
 
 function clearHistory() {
-    if(confirm("Delete history?")) {
+    if(confirm("Are you sure you want to delete all history?")) {
         localStorage.removeItem('neurolensHistory');
         loadHistory();
         showToast("History Cleared! 🗑️", "error");
     }
 }
 
+// ==========================================
+// TOAST NOTIFICATION
+// ==========================================
+
 function showToast(message, type = "success") {
     const toast = document.getElementById("toast");
     toast.innerText = message;
+    
     toast.className = "toast show"; 
     if (type === "error") toast.classList.add("error");
-    setTimeout(function() { toast.className = toast.className.replace("show", ""); }, 3000);
+    
+    setTimeout(function() { 
+        toast.className = toast.className.replace("show", ""); 
+    }, 3000);
 }
