@@ -22,8 +22,8 @@
     <header>
         <div class="logo">Neuro<span>lens</span></div>
         <nav>
-            <a href="#" class="nav-link">Docs</a>
-            <a href="https://github.com/YOUR_USERNAME" target="_blank" class="github-btn">GitHub</a>
+            <button onclick="openSettings()" class="settings-btn" title="Settings">⚙️</button>
+            <a href="https://github.com/praneel-pandey" target="_blank" class="github-btn">GitHub</a>
         </nav>
     </header>
 
@@ -67,7 +67,30 @@
             Check out <a href="https://youtube.com/@Editromation" target="_blank" style="color:#ef4444; text-decoration:none;">Editromation</a>
         </p>
     </footer>
+    <div id="settingsModal" class="modal">
+    <div class="modal-content">
+        <span onclick="closeSettings()" class="close-btn">&times;</span>
+        <h2>⚙️ Settings</h2>
+
+        <div class="setting-group">
+            <label>API Key (Saved locally):</label>
+            <input type="password" id="userApiKey" placeholder="Paste Gemini API Key here...">
+        </div>
+
+        <div class="setting-group">
+            <label>Summary Style:</label>
+            <select id="summaryStyle">
+                <option value="bullet">📝 Bullet Points (Default)</option>
+                <option value="detailed">📖 Detailed Paragraphs</option>
+                <option value="eli5">👶 Explain Like I'm 5</option>
+            </select>
+        </div>
+
+        <button onclick="saveSettings()" class="save-btn">Save Settings</button>
+    </div>
+</div>
 
     <script src="script.js"></script>
 </body>
 </html>
+
