@@ -410,3 +410,87 @@ textarea {
     50% { transform: scale(1.05); }
     100% { transform: scale(1); }
 }
+/* Day 9: Settings Modal & Button */
+.settings-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-right: 15px;
+    transition: transform 0.3s;
+}
+
+.settings-btn:hover {
+    transform: rotate(90deg); /* Ghumne wala effect */
+}
+
+/* The Modal (Background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Black w/ opacity */
+    backdrop-filter: blur(5px);
+}
+
+/* Modal Content Box */
+.modal-content {
+    background-color: #1e293b;
+    margin: 10% auto;
+    padding: 30px;
+    border: 1px solid #38bdf8;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+    text-align: left;
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover { color: white; }
+
+.setting-group {
+    margin-bottom: 20px;
+}
+
+.setting-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #cbd5e1;
+    font-weight: bold;
+}
+
+.setting-group input, .setting-group select {
+    width: 100%;
+    padding: 10px;
+    background: #0f172a;
+    border: 1px solid #334155;
+    color: white;
+    border-radius: 6px;
+    outline: none;
+}
+
+.save-btn {
+    width: 100%;
+    background: #38bdf8;
+    color: #0f172a;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.save-btn:hover { background: #7dd3fc; }
