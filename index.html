@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Neurolens | AI Research Summarizer</title>
-
+    
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
-
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1698/1698535.png">
@@ -20,26 +19,30 @@
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
 </head>
-
 <body>
+
+    <div id="offlineMsg" class="offline-badge" style="display: none;">⚠️ No Internet Connection</div>
+
     <header>
         <div class="logo">Neuro<span>lens</span></div>
         <nav>
             <button onclick="openSettings()" class="settings-btn" title="Settings">⚙️</button>
-            <a href="https://github.com/praneel-pandey" target="_blank" class="github-btn">GitHub</a>
+            <a href="https://github.com/YOUR_USERNAME" target="_blank" class="github-btn">GitHub</a>
         </nav>
     </header>
 
     <main>
         <div class="hero">
-            <span class="badge">Day 8: Voice & PDF Added</span>
+            <span class="badge">Day 13: Offline Mode & Clear Button</span>
             <h1>Fast-Track Your <br><span>AI Knowledge</span></h1>
             <p>Don't read pages. Get the pulse. Summarize complex AI research papers in seconds using Google Gemini.</p>
-
+            
             <div class="input-container">
-                <textarea id="paperText" placeholder="Paste the Paper's Abstract or Text here..." rows="3"></textarea>
+                <textarea id="paperText" placeholder="Paste the Paper's Abstract or Text here... (Press Ctrl + Enter to Analyze)" rows="3"></textarea>
+                
+                <button onclick="clearInput()" class="clear-input-btn" title="Clear Text">✖</button>
+                
                 <button onclick="summarize()">Analyze</button>
             </div>
         </div>
@@ -47,7 +50,7 @@
         <section id="result" class="result-placeholder">
             <div id="loader" class="loader"></div>
             <p id="statusText" class="analyzing-text">NEUROLENS IS THINKING...</p>
-
+            
             <div id="output">
                 <p>Enter text above to see the Neurolens magic. ✨</p>
             </div>
@@ -64,21 +67,11 @@
 
     <div id="toast" class="toast">Notification Message</div>
 
-    <footer>
-        <p>
-            &copy; 2026 Neurolens | Built by
-            <a href="https://linkedin.com/in/praneel-pandey" target="_blank"
-                style="color:#38bdf8; text-decoration:none;">Praneel Pandey</a>
-            <br>
-            Check out <a href="https://youtube.com/@Editromation" target="_blank"
-                style="color:#ef4444; text-decoration:none;">Editromation</a>
-        </p>
-    </footer>
     <div id="settingsModal" class="modal">
         <div class="modal-content">
             <span onclick="closeSettings()" class="close-btn">&times;</span>
             <h2>⚙️ Settings</h2>
-
+            
             <div class="setting-group">
                 <label>API Key (Saved locally):</label>
                 <input type="password" id="userApiKey" placeholder="Paste Gemini API Key here...">
@@ -97,7 +90,17 @@
         </div>
     </div>
 
+    <footer>
+        <p>
+            &copy; 2026 Neurolens | Built by 
+            <a href="https://linkedin.com/in/YOUR_LINKEDIN" target="_blank" style="color:#38bdf8; text-decoration:none;">Your Name</a>
+            <br>
+            Check out <a href="https://youtube.com/@Editromation" target="_blank" style="color:#ef4444; text-decoration:none;">Editromation</a>
+        </p>
+    </footer>
+
     <script src="script.js"></script>
+
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
@@ -106,5 +109,4 @@
         }
     </script>
 </body>
-
 </html>
