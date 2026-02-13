@@ -344,3 +344,46 @@ footer {
     color: #64748b;
     font-size: 0.9rem;
 }
+/* Day 13: Clear Input Button & Offline Mode */
+
+.input-container {
+    position: relative; /* Zaroori hai taaki 'X' button iske andar hi rahe */
+}
+
+.clear-input-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px; /* Right corner mein chipka rahega */
+    background: transparent;
+    color: #64748b;
+    border: none;
+    font-size: 1.2rem;
+    padding: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+    width: auto; /* Analyze button se alag size */
+    box-shadow: none;
+}
+
+.clear-input-btn:hover {
+    color: #ef4444; /* Red color on hover */
+    transform: scale(1.1);
+    background: transparent;
+    box-shadow: none;
+}
+
+/* Offline Indicator (Jab net chala jaye) */
+.offline-badge {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #ef4444;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    z-index: 1000;
+    display: none; /* Default hidden */
+}
