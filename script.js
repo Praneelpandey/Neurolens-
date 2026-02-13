@@ -311,3 +311,55 @@ function showToast(message, type = "success") {
         toast.className = toast.className.replace("show", ""); 
     }, 3000);
 }
+// ==========================================
+// DAY 13: ERROR HANDLING & OFFLINE MODE
+// ==========================================
+
+// 1. Clear Text Function
+function clearInput() {
+    const textarea = document.getElementById("paperText");
+    if (textarea.value === "") return; // Agar pehle se khaali hai toh kuch mat karo
+    
+    // Animation for clearing
+    textarea.style.transition = "opacity 0.2s";
+    textarea.style.opacity = "0";
+    
+    setTimeout(() => {
+        textarea.value = "";
+        textarea.style.opacity = "1";
+        textarea.focus(); // Cursor wapas lao
+        showToast("Text Cleared! 🧹");
+    }, 200);
+}
+
+// 2. Offline Detection Logic
+window.addEventListener('load', () => {
+    // Check on startup
+    if (!navigator.onLine) {
+        showOffline();
+    }
+});
+
+window.addEventListener('offline', () => {
+    showOffline();
+    showToast("⚠️ Connection Lost!", "error");
+});
+
+window.addEventListener('online', () => {
+    hideOffline();
+    showToast("✅ Back Online!", "success");
+});
+
+function showOffline() {
+    document.getElementById("offlineMsg").style.display = "block";
+    // Disable analyze button
+    document.querySelector('.input-container button:last-child').disabled = true;
+    document.querySelector('.input-container button:last-child').style.opacity = "0.5";
+}
+
+function hideOffline() {
+    document.getElementById("offlineMsg").style.display = "none";
+    // Enable analyze button
+    document.querySelector('.input-container button:last-child').disabled = false;
+    document.querySelector('.input-container button:last-child').style.opacity = "1";
+}
