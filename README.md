@@ -6,7 +6,7 @@
 *(Note: Replace this link with a real screenshot of your app later)*
 
 ## 🚀 Live Demo
-👉 **[Click here to use Neurolens](https://Praneelpandey.github.io/neurolens/)**
+👉 **[Click here to use Neurolens](https://praneelpandey.github.io/Neurolens-/)**
 
 ---
 
