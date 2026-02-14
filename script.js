@@ -363,3 +363,22 @@ function hideOffline() {
     document.querySelector('.input-container button:last-child').disabled = false;
     document.querySelector('.input-container button:last-child').style.opacity = "1";
 }
+// ==========================================
+// DAY 14: SHARE APP FEATURE
+// ==========================================
+
+function shareApp() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Neurolens AI',
+            text: 'Check out this AI Summarizer App I built! 🚀',
+            url: window.location.href
+        })
+        .then(() => showToast("Thanks for sharing! ❤️"))
+        .catch((error) => console.log('Error sharing', error));
+    } else {
+        // Agar browser support nahi karta (Like Old PC)
+        navigator.clipboard.writeText(window.location.href);
+        showToast("Link copied to clipboard! 🔗");
+    }
+}
