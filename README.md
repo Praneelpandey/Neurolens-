@@ -27,7 +27,7 @@
 ## 📸 Screenshots
 | Desktop View | Mobile View |
 |:---:|:---:|
-| ![Desktop](https://via.placeholder.com/400x200) | ![Mobile](https://github.com/user-attachments/assets/0d4febe8-eba7-4df3-85b0-526cfe4eab4a)
+| ![Desktop](https://via.placeholder.com/400x200) | ![Mobile](https://github.com/user-attachments/assets/0d4febe8-eba7-4df3-85b0-526cfe4eab4a =250x250)
 ) |
 
 ## 📦 How to Run Locally
