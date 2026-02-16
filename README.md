@@ -32,4 +32,4 @@
 ## 📦 How to Run Locally
 1. Clone the repo:
    ```bash
-   git clone [https://github.com/Praneelpandey/neurolens.git](https://github.com/YOUR_USERNAME/neurolens.git)
+   git clone [https://github.com/Praneelpandey/neurolens.git](https://github.com/Praneelpandey/neurolens.git)
