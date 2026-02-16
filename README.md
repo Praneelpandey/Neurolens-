@@ -27,7 +27,8 @@
 ## 📸 Screenshots
 | Desktop View | Mobile View |
 |:---:|:---:|
-| ![Desktop](https://via.placeholder.com/400x200) | ![Mobile](https://via.placeholder.com/200x400) |
+| ![Desktop](https://via.placeholder.com/400x200) | ![Mobile](https://github.com/user-attachments/assets/0d4febe8-eba7-4df3-85b0-526cfe4eab4a)
+) |
 
 ## 📦 How to Run Locally
 1. Clone the repo:
