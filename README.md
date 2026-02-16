@@ -2,8 +2,8 @@
 
 > **Fast-track your knowledge.** Summarize complex articles, research papers, and text in seconds using Google Gemini AI.
 
-![Neurolens Demo](https://via.placeholder.com/800x400/0f172a/38bdf8?text=Neurolens+AI+Dashboard)
-*(Note: Replace this link with a real screenshot of your app later)*
+![Neurolens Demo](https://github.com/user-attachments/assets/b23ccd64-fdbd-40ce-91ff-cffc067c2b01)
+
 
 ## 🚀 Live Demo
 👉 **[Click here to use Neurolens](https://praneelpandey.github.io/Neurolens-/)**
