@@ -8,7 +8,7 @@
 ## 🚀 Live Demo
 👉 **[Click here to use Neurolens](https://praneelpandey.github.io/Neurolens-/)**
 
----
+----
 
 ## ✨ Features
 - **⚡ AI-Powered Summaries:** Uses Google Gemini 1.5 Flash model.
