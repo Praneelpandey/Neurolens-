@@ -20,7 +20,7 @@
 - **🎨 Glassmorphism UI:** Modern, responsive, and animated design.
 
 ## 🛠️ Tech Stack
-- **Frontend:** HTML5, CSS3 (Animations & Glassmorphism), JavaScript (ES6+)
+- **Frontend:** HTML5, CSS3 (Animations & Glassmorphism), JavaScript (ES6+).
 - **AI Model:** Google Gemini API
 - **Tools:** Marked.js (Markdown), html2pdf.js, LocalStorage
 
